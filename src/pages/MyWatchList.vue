@@ -4,7 +4,7 @@
       我的关注
     </header>
     <div class="body">
-      <div class="cards">
+      <div class="cards" v-if="watchList.length">
         <router-link class="card" v-for="(item, index) in watchList" :to="{name: 'BusInfo', query: item.query}" :key="index">
             <i class="icon-star"></i>
             <div>
@@ -16,9 +16,10 @@
               <p>{{item.remainingStops ? item.remainingStops : '-'}}站</p>
               <p>{{item.remainingTime ? item.remainingTime : '-'}}</p>
             </div> -->
-         
         </router-link>
-
+      </div>
+      <div v-else class="empty">
+        暂无关注
       </div>
     </div>
     <v-tab-nav></v-tab-nav>
@@ -64,6 +65,10 @@ export default {
   p {
     margin: 0.3em;
   }
+}
+.empty {
+  margin-top: 30%;
+  text-align: center;
 }
 </style>
   
