@@ -16,11 +16,14 @@ async function getData(storageKey, asyncApiFn, ...args) {
   return data;
 }
 
-export async function getBusLines(searchWord) {
+export async function getBusLines(searchWord = '') {
   let busList = await getData(BUS_LIST, async () => {
     const res = await axios.get('/busList');
     return res.data.result.list;
   });
+  if(searchWord === '') {
+    return busList;
+  }
   return busList.filter(item => {
     return item.indexOf(searchWord) >= 0;
   });

@@ -17,8 +17,8 @@ export default {
       }
     },
     type: {
-            type: String,
-      default: 'primary',
+      type: String,
+      // default: 'primary',
       validator(value) {
         return ["primary", "success", "warning", "danger", "info", "text"].indexOf(value) !== -1;
       }
@@ -35,8 +35,12 @@ export default {
 <style lang="less" scoped>
 @import '../assets/styles/vars.less';
 .btn {
-  border: 1px solid @primaryColor;
-  padding: .5em 1.5em;
+  border: 1px solid @lightGray;
+  padding: .5em 1.2em;
+  outline: none;
+  background-color: #fff;
+  border-radius: 2px;
+  color: @darkGray;
 }
 .medium {
   font-size: 16px;
@@ -49,6 +53,7 @@ export default {
 }
 .primary {
   background-color: @darkPrimaryColor;
+  border-color: @darkPrimaryColor;
   color: #fff;
   border-radius: 2px;
 }

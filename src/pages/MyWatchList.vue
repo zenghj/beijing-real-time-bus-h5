@@ -12,10 +12,10 @@
               <p>{{item.curStopName}}</p>
               <p>{{item.routeInfo}}</p>
             </div>
-            <div>
+            <!-- <div>
               <p>{{item.remainingStops ? item.remainingStops : '-'}}站</p>
               <p>{{item.remainingTime ? item.remainingTime : '-'}}</p>
-            </div>
+            </div> -->
          
         </router-link>
 
@@ -35,7 +35,7 @@ export default {
     }
   },
   created() {
-    let watchListMap = storage.get(STORAGE_KEYS.WATCHED_ROUTES_BASIC_INFO)
+    let watchListMap = storage.get(STORAGE_KEYS.WATCHED_ROUTES_BASIC_INFO) || {}
     this.watchList = Object.values(watchListMap)
   }
 }
@@ -56,7 +56,7 @@ export default {
   border-radius: 5px;
   .icon-star {
     position: absolute;
-    top: 0.2em;
+    top: 0.8em;
     right: 0.8em;
     color: #ff9800;
     font-size: 20px;

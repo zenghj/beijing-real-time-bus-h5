@@ -11,8 +11,8 @@
           <p>上车站点: {{busInfo.curStopName}}</p>
           <p>{{busInfo.busRunTime}}</p>
         </div>
-        <v-button v-if="isWatchOn" size="small" @click="cancelAttention">取消关注</v-button>
-        <v-button v-else size="small" @click="makeAttention">关注</v-button>
+        <v-button v-if="isWatchOn" size="mini" @click="cancelAttention">取消关注</v-button>
+        <v-button type="primary" v-else size="mini" @click="makeAttention">关注</v-button>
 
       </div>
 
@@ -92,7 +92,7 @@ export default {
     },
     updateInfo() {
       let query = this.getQuery();
-      query && query.lineId && getBusTimeInfo(query.lineId, query.dirId, query.stopSeq).then(info => {
+      return getBusTimeInfo(query.lineId, query.dirId, query.stopSeq).then(info => {
         this.busInfo = info;
       }, err => {
         console.log(err)
@@ -129,11 +129,18 @@ export default {
       }
     },
     goBack() {
-      this.$router.back();
+      if(window.history.length > 1) {
+        this.$router.back()
+      } else {
+        this.$router.push('/')
+      }
     },
     refresh() {
+      console.log('ref')
       this.clearTimer();
-      this.updateInfo();
+      this.updateInfo().then(() => {
+        this.$message('更新成功')
+      });
     },
     makeAttention() {
       let list = this.getWatchList()
@@ -169,6 +176,10 @@ export default {
   i {
     font-size: 18px;
     line-height: inherit;
+    &.icon-refresh {
+      padding: 0 1em;
+      margin-right: -1em;
+    }
   }
 }
 
@@ -180,6 +191,9 @@ section.bus-info {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+}
+.desc2 {
+  margin-top: 0;
 }
 .bus {
   position: relative;
@@ -202,7 +216,7 @@ section.bus-info {
     border: 1px solid #666;
     border-radius: 50%;
     background: #fff;
-    z-index: 2;
+    // z-index: 2;
   }
   & + .bus:after {
     content: '';
@@ -212,7 +226,7 @@ section.bus-info {
     height: 4em;
     width: 2px;
     background: #999;
-    z-index: 1;
+    z-index: -1;
   }
   .icon-bus {
     position: absolute;

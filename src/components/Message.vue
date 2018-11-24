@@ -57,6 +57,7 @@ export default {
   box-shadow: 0 0;
   border-radius: 4px;
   color: #fff;
-  background: #191818a3;
+  background: rgba(25, 24, 24, 0.8);
+  z-index: 1000;
 }
 </style>

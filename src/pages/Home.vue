@@ -1,7 +1,7 @@
 <template>
   <section class="home-page">
     <div class="header app-header-bar">
-      <h1>标题</h1>
+      北京实时公交
     </div>
     <div class="body">
       <div class="form">
@@ -10,7 +10,7 @@
 
         <v-select class="margin1em" label="text" v-model="dir" :options="dirs"></v-select>
         <v-select class="margin1em" label="text" v-model="station" :options="stations"></v-select>
-        <v-button class="margin1em" v-on:click="handleClickQuery">查询公交信息</v-button>
+        <v-button type="primary" class="margin1em" v-on:click="handleClickQuery">查询公交信息</v-button>
       </div>
     </div>
     <v-tab-nav></v-tab-nav>
@@ -44,7 +44,11 @@ import {getBusLines, getBusDirList, getBusDirStationList} from '../api'
         return this.station.seq;
       }
     },
-    created() {console.log(this)},
+    created() {
+      getBusLines().then(list => {
+        this.busLines = list;
+      })
+    },
     watch: {
       lineId: function(newVal) {
         // TODO 加防抖
@@ -100,11 +104,7 @@ import {getBusLines, getBusDirList, getBusDirStationList} from '../api'
 </script>
 <style lang="less" scoped>
 @import '../assets/styles/vars.less';
-.app-header-bar {
-  h1 {
-    margin: 0;
-  }
-}
+
 .body {
   .form {
     padding: 2em;
