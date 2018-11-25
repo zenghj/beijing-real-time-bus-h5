@@ -1,24 +1,37 @@
 <template>
   <div class="bus-info-container">
-    <header class="app-header-bar">
-      <i class="icon-left-arrow" @click="goBack"></i>
-      <i class="icon-refresh" @click="refresh"></i>
-    </header>
-    <section class="bus-info">
+    <div class="header-wrapper">
+      <header class="app-header-bar">
+        <i class="icon-arrow-left" @click="goBack"></i>
+        <i class="icon-refresh" @click="refresh"></i>
+      </header>
+      <v-progress-bar class="progress-bar" :loading="isProgressBarVisible"></v-progress-bar>
+    </div>
+    <section v-if="pageInited" class="bus-info">
       <div class="route-info">
         <div>
           <p>{{busInfo.routeName}} {{busInfo.routeInfo}}</p>
           <p>上车站点: {{busInfo.curStopName}}</p>
           <p>{{busInfo.busRunTime}}</p>
         </div>
-        <v-button v-if="isWatchOn" size="mini" @click="cancelAttention">取消关注</v-button>
-        <v-button type="primary" v-else size="mini" @click="makeAttention">关注</v-button>
-
+        <v-button class="btn" v-if="isWatchOn" size="mini" @click="cancelAttention">取消关注</v-button>
+        <v-button class="btn" type="primary" v-else size="mini" @click="makeAttention">关注</v-button>
       </div>
-
       <p class="desc2">{{busInfo.desc2}}</p>
       <div class="buses">
-        <div v-for="(name, index) in stopNames" :class="['bus', (busInfo.curStopSeq === index + 1 + '') ? 'current' : '']" :key="index">
+        <div class="icons-desc">
+          <p>
+            <i class="icon-bus active"></i>&nbsp;到站车辆
+          </p>
+          <p>
+            <i class="icon-bus"></i>&nbsp;途中车辆
+          </p>
+        </div>
+        <div
+          v-for="(name, index) in stopNames"
+          :class="['bus', (busInfo.curStopSeq === index + 1 + '') ? 'current' : '']"
+          :key="index"
+        >
           <i v-if="busesArriving.includes(index + 1 + '')" class="icon-bus active"></i>
           <i v-if="busesArriving.includes(index + 1.5 + '')" class="icon-bus middle active"></i>
           <i v-if="busesOnTheWay.includes(index + 1 + '')" class="icon-bus"></i>
@@ -28,7 +41,6 @@
       </div>
     </section>
   </div>
-
 </template>
 
 <script>
@@ -54,6 +66,8 @@ export default {
       busInfo: {},
       isWatchOn: false,
       timer: '',
+      isProgressBarVisible: true,
+      pageInited: false,
     }
   },
   computed: {
@@ -70,20 +84,29 @@ export default {
       return encodeWatchUniqueKey(this.$router.currentRoute.query)
     }
   },
-  beforeRouteEnter (to, from, next) {
-    const query = to.query || {};
-    getBusTimeInfo(query.lineId, query.dirId, query.stopSeq).then(info => {
-      next(vm => {
-        vm.isWatchOn = vm.getWatchList().includes(encodeWatchUniqueKey(query))
-        vm.busInfo = info;
-        vm.startTimer();
+  // beforeRouteEnter (to, from, next) {
+  //   const query = to.query || {};
+  //   getBusTimeInfo(query.lineId, query.dirId, query.stopSeq).then(info => {
+  //     next(vm => {
+  //       vm.isWatchOn = vm.getWatchList().includes(encodeWatchUniqueKey(query))
+  //       vm.busInfo = info;
+  //       vm.startTimer();
+  //     })
+  //   }, err => {
+  //     console.error(err);
+  //     next();
+  //   })
+  // },
+  created() {
+      let query = this.getQuery();
+      this.isWatchOn = this.getWatchList().includes(encodeWatchUniqueKey(query));
+      this.updateInfo().then(() => {
+        this.isProgressBarVisible = false;
+        this.pageInited = true;
       })
-    }, err => {
-      console.error(err);
-      next();
-    })
-  },
+    },
   methods: {
+    
     getQuery() {
       return this.$router.currentRoute.query;
     },
@@ -135,12 +158,17 @@ export default {
         this.$router.push('/')
       }
     },
+    withProgress(promise) {
+      this.isProgressBarVisible = true;
+      promise.finally(() => {
+        this.isProgressBarVisible = false;
+      })
+    },
     refresh() {
-      console.log('ref')
       this.clearTimer();
-      this.updateInfo().then(() => {
-        this.$message('更新成功')
-      });
+      this.withProgress(this.updateInfo().then(() => {
+        this.$message('更新成功');
+      }));
     },
     makeAttention() {
       let list = this.getWatchList()
@@ -170,6 +198,20 @@ export default {
 
 <style lang="less" scoped>
 @import '../assets/styles/vars.less';
+@barHeight: 4px;
+.header-wrapper {
+  position: relative;
+  .progress-bar {
+    position: absolute;
+    left: 0;
+    bottom: -@barHeight;
+  }
+}
+.bus-info-container .btn {
+  width: 6em;
+  text-align: center;
+  padding: 0.5em 0;
+}
 .app-header-bar {
   display: flex;
   justify-content: space-between;
@@ -228,16 +270,31 @@ section.bus-info {
     background: #999;
     z-index: -1;
   }
+}
+.buses {
+  position: relative;
+}
+.icons-desc {
+  position: absolute;
+  p {
+    margin: 0.5em 0;
+  }
   .icon-bus {
-    position: absolute;
-    left: -4em;
-    font-size: 20px;
-    &.middle {
-      top: 1.3em;
-    }
-    &.active {
-      color: @lightPrimaryColor;
-    }
+    vertical-align: text-bottom;
+  }
+}
+.bus .icon-bus {
+  position: absolute;
+  left: -4em;
+
+  &.middle {
+    top: 1.3em;
+  }
+}
+.icon-bus {
+  font-size: 20px;
+  &.active {
+    color: @lightPrimaryColor;
   }
 }
 </style>

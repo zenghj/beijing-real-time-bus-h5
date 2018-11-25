@@ -36,7 +36,7 @@ export default {
 @import '../assets/styles/vars.less';
 .btn {
   border: 1px solid @lightGray;
-  padding: .5em 1.2em;
+  padding: 0.5em 1.2em;
   outline: none;
   background-color: #fff;
   border-radius: 2px;
@@ -56,5 +56,8 @@ export default {
   border-color: @darkPrimaryColor;
   color: #fff;
   border-radius: 2px;
+  &:active {
+    opacity: 0.9;
+  }
 }
 </style>

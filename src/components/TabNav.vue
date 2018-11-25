@@ -29,6 +29,7 @@
   border-top: 1px solid #ccc;
   height: 10vh;
   padding: 0 2em;
+  z-index: @bottomTabZindex;
 }
 .nav-tabs {
   display: flex;
@@ -40,7 +41,7 @@
     text-decoration: none;
     color: #333;
     background: #fff;
-    &:active {
+    &:active, &:link, &:hover, &:visited {
       background: inherit;
     }
     &.active {
