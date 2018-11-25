@@ -286,7 +286,7 @@ section.bus-info {
 }
 .bus .icon-bus {
   position: absolute;
-  left: -4em;
+  left: -3em;
 
   &.middle {
     top: 1.3em;
