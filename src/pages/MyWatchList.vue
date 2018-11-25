@@ -43,8 +43,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@import '../assets/styles/less-util.less';
 .body {
   padding: 0 2em;
+  padding-bottom: @bottomNavHeight;
 }
 .card {
   position: relative;

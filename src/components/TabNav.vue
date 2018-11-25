@@ -28,7 +28,7 @@
   display: flex;
   align-items: center;
   width: 100%;
-  height: 10vh;
+  height: @bottomNavHeight;
   padding: 0 2em;
   background: #fff;
   border-top: 1px solid #ccc;
