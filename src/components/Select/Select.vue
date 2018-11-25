@@ -168,12 +168,13 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import '../../assets/styles/vars.less';
+@import '../../assets/styles/less-util.less';
 @selectHeight: 2.5em;
 .select-root {
   // display: inline-block;
   position: relative;
   cursor: pointer;
+  .fade(.2s);
 }
 .input-wrapper {
   display: inline-block;
@@ -217,6 +218,6 @@ export default {
   background: #fff;
   box-shadow: @boxShadow;
   border-radius: 4px;
-  z-index: 100;
+  z-index: @selectOptionsZindex;
 }
 </style>

@@ -40,6 +40,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+@import "../assets/styles/vars.less";
 .fade-enter-active, .fade-leave-active {
   transition: opacity .5s;
 }
@@ -58,6 +59,6 @@ export default {
   border-radius: 4px;
   color: #fff;
   background: rgba(25, 24, 24, 0.8);
-  z-index: 1000;
+  z-index: @messageZindex;
 }
 </style>

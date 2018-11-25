@@ -64,7 +64,7 @@ export default {
 <style lang="less" scoped>
 @import '../assets/styles/vars.less';
 .progress-bar-root {
-  height: 4px;
+  height: @progressBarHeight;
   background: @orange;
   // transition: width .1s ease-in-out;
 }

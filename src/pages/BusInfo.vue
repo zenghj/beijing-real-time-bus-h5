@@ -101,8 +101,9 @@ export default {
       let query = this.getQuery();
       this.isWatchOn = this.getWatchList().includes(encodeWatchUniqueKey(query));
       this.updateInfo().then(() => {
-        this.isProgressBarVisible = false;
         this.pageInited = true;
+      }).finally(() => {
+        this.isProgressBarVisible = false;
       })
     },
   methods: {
@@ -118,8 +119,8 @@ export default {
       return getBusTimeInfo(query.lineId, query.dirId, query.stopSeq).then(info => {
         this.busInfo = info;
       }, err => {
-        console.log(err)
-        this.$message(err);
+        this.$message(typeof err.msg === 'string' ? err.msg : '请求失败');
+        throw err;
       }).finally(() => {
         this.startTimer()
       })
@@ -198,13 +199,13 @@ export default {
 
 <style lang="less" scoped>
 @import '../assets/styles/vars.less';
-@barHeight: 4px;
+
 .header-wrapper {
   position: relative;
   .progress-bar {
     position: absolute;
     left: 0;
-    bottom: -@barHeight;
+    bottom: -@progressBarHeight;
   }
 }
 .bus-info-container .btn {

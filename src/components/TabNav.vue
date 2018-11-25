@@ -25,13 +25,17 @@
   position: fixed;
   bottom: 0;
   left: 0;
+  display: flex;
+  align-items: center;
   width: 100%;
-  border-top: 1px solid #ccc;
   height: 10vh;
   padding: 0 2em;
+  background: #fff;
+  border-top: 1px solid #ccc;
   z-index: @bottomTabZindex;
 }
 .nav-tabs {
+  width: 100%;
   display: flex;
   justify-content: space-between;
   .tab {
