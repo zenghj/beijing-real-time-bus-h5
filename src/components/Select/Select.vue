@@ -1,7 +1,14 @@
 <template>
   <div class="select-root" v-click-outside="hideOptions">
     <div class="input-wrapper">
-      <input v-if="filterable" :value="query" @input="handleQueryChange" class="select-input" type="text" :placeholder="placeholder" @click="toggle">
+      <input v-if="filterable" 
+        :value="query" 
+        @input="handleQueryChange" 
+        class="select-input" 
+        type="text" 
+        :placeholder="placeholder" 
+        :disabled="disabled"
+        @click="toggle">
       <input
         v-else
         :value="selectedLabel"
@@ -9,16 +16,17 @@
         type="text"
         :placeholder="placeholder"
         readonly
+        :disabled="disabled"
         @click="toggle"
       >
-      <i :class="['icon-arrow2-down', 'icon-arrow', optionsVisible? 'rotated' : '']"></i>
+      <i :class="['icon-arrow2-down', 'icon-arrow', optionsVisible? 'rotated' : '']" @click="toggle"></i>
     </div>
     <transition name="fade">
       <div v-show="optionsVisible" class="options">
         <slot v-if="$slots.default"></slot>
-        <div v-else-if="!loading">暂无选项</div>
-        <div v-if="noMatch">无匹配数据</div>
-        <div v-if="loading">加载中...</div>
+        <div class="tip" v-else-if="!loading">暂无选项</div>
+        <div class="tip" v-if="noMatch">无匹配数据</div>
+        <div class="tip" v-if="loading">加载中...</div>
       </div>
     </transition>
   </div>
@@ -37,6 +45,7 @@ export default {
     },
     filterable: Boolean,
     loading: Boolean,
+    disabled: Boolean,
   },
   provide() {
     return {
@@ -193,6 +202,12 @@ export default {
     &:active, &:focus {
       border-color: @primaryColor;
     }
+    &:disabled {
+      background: @lightestGray;
+      border-color: @lightGray;
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
   }
   .icon-arrow {
     position: absolute;
@@ -213,11 +228,13 @@ export default {
   box-sizing: border-box;
   width: 100%;
   padding: 0.5em;
-
-  background: #fff;
+  margin-bottom: 1em;
   background: #fff;
   box-shadow: @boxShadow;
   border-radius: 4px;
   z-index: @selectOptionsZindex;
+  .tip {
+    color: #aaa;
+  }
 }
 </style>

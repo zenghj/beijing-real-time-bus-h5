@@ -29,10 +29,21 @@
   align-items: center;
   width: 100%;
   height: @bottomNavHeight;
-  padding: 0 2em;
+  padding: 0 1.5em;
   background: #fff;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid #eee;
   z-index: @bottomTabZindex;
+  // &:before {
+  //   content: '';
+  //   position: absolute;
+  //   left: 0;
+  //   top: 0;
+  //   height: 1px;
+  //   width: 100%;
+  //   background: @lightestGray;
+  //   transform: scaleY(0.5);
+  //   transform-origin: 50% 100%;
+  // }
 }
 .nav-tabs {
   width: 100%;
@@ -42,6 +53,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: .5em;
     text-decoration: none;
     color: #333;
     background: #fff;

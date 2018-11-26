@@ -17,7 +17,13 @@
             :value="line"
           ></v-select-option>
         </v-select>
-        <v-select class="margin1em" :loading="dirsLoading" placeholder="请选择路线方向" v-model="dirId">
+        <v-select
+          class="margin1em"
+          :loading="dirsLoading"
+          placeholder="请选择路线方向"
+          v-model="dirId"
+          :disabled="dirSelectDisabled"
+        >
           <v-select-option
             v-for="(item, index) in dirs"
             :key="index"
@@ -30,6 +36,7 @@
           :loading="stationsLoading"
           placeholder="请选择上车站点"
           v-model="stopSeq"
+          :disabled="stationSelectDiabled"
         >
           <v-select-option
             v-for="(item, index) in stations"
@@ -51,7 +58,7 @@
 import axios from 'axios'
 import {getBusLines, getBusDirList, getBusDirStationList} from '../api'
 // import {MySelect, SelectOption} from 'Components'
-
+// let t = 0
   export default {
     data() {
       return {
@@ -69,12 +76,22 @@ import {getBusLines, getBusDirList, getBusDirStationList} from '../api'
         stationsLoading: true,
       }
     },
+    // beforeCreate() {
+    //   console.time('home')
+    //   t = Date.now()
+    // },
     created() {
       getBusLines().then(list => {
-        this.busLines = list || [];
-        this.linesLoading = false;
+        this.$nextTick(() => { // TODO 长列表渲染的问题
+          this.busLines = list || [];
+          this.linesLoading = false;
+        })
       })
     },
+    // mounted() {
+    //   console.timeEnd('home')
+    //   alert(Date.now() - t)
+    // },
     watch: {
       lineId: function(newVal) {
         // TODO 加防抖
@@ -98,6 +115,14 @@ import {getBusLines, getBusDirList, getBusDirStationList} from '../api'
           })
         }
         
+      }
+    },
+    computed: {
+      dirSelectDisabled() {
+        return !this.lineId;
+      },
+      stationSelectDiabled() {
+        return !this.lineId || !this.dirId;
       }
     },
     methods: {
@@ -144,6 +169,9 @@ import {getBusLines, getBusDirList, getBusDirStationList} from '../api'
     justify-content: center;
     .margin1em {
       margin: 1em 0;
+      &:first-child {
+        margin-top: 0;
+      }
     }
   }
   input {

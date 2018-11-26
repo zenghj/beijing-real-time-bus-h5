@@ -3,7 +3,7 @@
     <div class="header-wrapper">
       <header class="app-header-bar">
         <i class="icon-arrow-left" @click="goBack"></i>
-        <i class="icon-refresh" @click="refresh"></i>
+        <i :class="['icon-refresh', isRefreshing ? 'rotating' : '']" @click="refresh"></i>
       </header>
       <v-progress-bar class="progress-bar" :loading="isProgressBarVisible"></v-progress-bar>
     </div>
@@ -68,6 +68,8 @@ export default {
       timer: '',
       isProgressBarVisible: true,
       pageInited: false,
+      updataInterval: 30000,
+      isRefreshing: false,
     }
   },
   computed: {
@@ -128,8 +130,11 @@ export default {
     startTimer() {
       clearTimeout(this.timer);
       this.timer = setTimeout(() => {
-        this.updateInfo()
-      }, 30000)
+        this.isRefreshing = true;
+        this.updateInfo().finally(() => {
+          this.isRefreshing = false;
+        });
+      }, this.updataInterval);
     },
     clearTimer() {
       clearTimeout(this.timer);
@@ -161,7 +166,7 @@ export default {
     },
     withProgress(promise) {
       this.isProgressBarVisible = true;
-      promise.finally(() => {
+      return promise.finally(() => {
         this.isProgressBarVisible = false;
       })
     },
@@ -222,12 +227,23 @@ export default {
     &.icon-refresh {
       padding: 0 1em;
       margin-right: -1em;
+      &.rotating {
+        animation: spin 1s linear infinite;
+      }
+    }
+    @keyframes spin {
+      0% {
+        transform: rotate(0);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
     }
   }
 }
 
 section.bus-info {
-  padding: 2em;
+  padding: 1em 2em 0;
 }
 .route-info {
   display: flex;
