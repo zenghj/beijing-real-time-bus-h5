@@ -58,6 +58,7 @@ export default {
       selectedOption: null,
       // cachedOptions: [],
       options: [],
+      optionsUuidMap: {},
       query: '',
       filteredCount: 0,
       noMatch: false,
@@ -73,7 +74,9 @@ export default {
   },
   watch: {
     value(newVal) {
-      this.setSelect(newVal);
+      this.$nextTick(() => {
+        this.setSelect(newVal);
+      })
     },
   }, 
   mounted() {
@@ -87,9 +90,13 @@ export default {
       let option = this.getOption(val)
       if(option) {
         this.selectedOption = option;
+        if(this.filterable) {
+          this.query = option.label;
+        }
       } else {
         this.selectedOption = null;
       }
+
     },
     getOption(val) {
       let opt;
@@ -133,13 +140,12 @@ export default {
     handleSelect(e, {label, value}) {
       this.$emit('input', value);
       this.hideOptions();
-      if(this.filterable) {
-        this.query = label;
-      }
     },
     // @inject to select-option
     registerOption(optionVm) {
-      if(!this.options.includes(optionVm)) {
+      if(!this.optionsUuidMap[optionVm.uuid]) {
+        // is it ok to initially setSelect here or it's too time consuming?
+        this.optionsUuidMap[optionVm.uuid] = true;
         this.options.push(optionVm);
         this.filteredCount +=1;
       }

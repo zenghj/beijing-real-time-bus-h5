@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import {getUuid} from 'Assets/js/utils'
 export default {
   props: {
     label: {
@@ -20,6 +21,7 @@ export default {
   data() {
     return {
       visible: true,
+      uuid: getUuid('option'),
     }
   },
   inject: ['$parentSelect'],
